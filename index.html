@@ -6,27 +6,76 @@
   <title>ভোটিং সিস্টেম - নাম দিয়ে ভোট</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #667eea, #764ba2); margin: 0; padding: 20px; color: #1e293b; }
-    .container { max-width: 900px; margin: auto; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-    h1 { text-align: center; color: white; }
-    .candidates { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin: 30px 0; }
-    .candidate { text-align: center; padding: 25px; border-radius: 20px; width: 250px; background: rgba(255,255,255,0.8); box-shadow: 0 8px 32px rgba(0,0,0,0.1); transition: all 0.3s; }
-    .candidate:hover { transform: translateY(-10px); }
-    .symbol img { width: 80px; height: auto; margin: 10px 0; }
-    button { padding: 14px 32px; font-size: 1.1em; margin: 8px; border: none; border-radius: 12px; color: white; cursor: pointer; transition: all 0.3s; }
-    .kolom { background: #10b981; }
-    .boi   { background: #f59e0b; }
-    .shapla{ background: #ef4444; }
-    .admin-btn { background: #4f46e5; }
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: linear-gradient(135deg, #667eea, #764ba2);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --text: #1e293b;
+      --shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding: 20px;
+      color: var(--text);
+    }
+    .container {
+      max-width: 950px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      padding: 40px;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+    h1, h2 { color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    .candidates { display: flex; flex-wrap: wrap; justify-content: center; gap: 35px; margin: 40px 0; }
+    .candidate {
+      text-align: center;
+      padding: 30px;
+      border-radius: 20px;
+      width: 260px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      transition: all 0.4s ease;
+    }
+    .candidate:hover { transform: translateY(-15px) scale(1.06); box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+    .symbol img { width: 90px; height: auto; margin-bottom: 15px; border-radius: 12px; }
+    button {
+      padding: 14px 34px;
+      font-size: 1.1em;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      color: white;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    button:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.2); }
+    .kolom { background: var(--success); }
+    .boi   { background: var(--warning); }
+    .shapla{ background: var(--danger); }
+    .admin-btn { background: var(--primary); }
     .back-btn { background: #7c3aed; }
-    .reset-btn { background: #ef4444; }
-    section { margin: 30px 0; padding: 25px; background: rgba(255,255,255,0.9); border-radius: 15px; }
-    input { padding: 12px; font-size: 1.1em; width: 100%; max-width: 400px; border-radius: 10px; border: 1px solid #ccc; }
-    #message { font-size: 1.3em; text-align: center; font-weight: bold; margin: 20px 0; }
-    .success { color: #10b981; }
-    .error { color: #ef4444; }
-    .result-bar { background: #e0e0e0; border-radius: 10px; margin: 10px 0; overflow: hidden; height: 35px; }
-    .bar-fill { height: 100%; color: white; text-align: center; font-weight: bold; transition: width 0.5s; }
+    .reset-btn { background: var(--danger); }
+    .export-btn { background: #059669; }
+
+    section { margin: 35px 0; padding: 30px; background: var(--card-bg); border-radius: 18px; box-shadow: var(--shadow); }
+    input { padding: 14px; font-size: 1.1em; width: 100%; max-width: 450px; border-radius: 12px; border: 1px solid #d1d5db; }
+    #message { font-size: 1.4em; text-align: center; font-weight: 500; margin: 25px 0; min-height: 40px; }
+    .success { color: var(--success); }
+    .error { color: var(--danger); }
+    .winner { font-weight: bold; color: #d97706; background: rgba(253,186,116,0.2); padding: 4px 12px; border-radius: 8px; }
+    #voted-list { max-height: 350px; overflow-y: auto; padding: 15px; background: white; border-radius: 12px; border: 1px solid #e5e7eb; }
+    #voter-search { margin-bottom: 20px; }
+    .bar-fill { transition: width 0.8s ease; }
   </style>
 </head>
 <body>
@@ -38,14 +87,21 @@
 
   <section id="admin-login" style="display:none;">
     <h2>অ্যাডমিন লগইন</h2>
-    <input type="password" id="adminPass" placeholder="পাসওয়ার্ড ">
+    <input type="password" id="adminPass" placeholder="পাসওয়ার্ড (ডিফল্ট: admin)">
     <button onclick="loginAdmin()">লগইন</button>
   </section>
 
   <section id="admin-section" style="display:none;">
     <h2>অ্যাডমিন প্যানেল</h2>
+    <p id="admin-stats"></p>
+    <button onclick="refreshResults()">রেজাল্ট রিফ্রেশ করো</button>
     <div id="admin-results"></div>
+    
+    <h3>ভোটার লিস্ট (সার্চ করো)</h3>
+    <input type="text" id="voter-search" placeholder="নাম সার্চ করো..." oninput="searchVoters()">
     <div id="voted-list"></div>
+
+    <button class="export-btn" onclick="exportVoterData()">ভোটার ডাটা এক্সপোর্ট করো (CSV)</button>
     <button class="back-btn" onclick="backToVoting()">← ভোটিং পেজে ফিরে যাও</button>
     <button class="reset-btn" onclick="resetAllVotes()">সব ভোট রিসেট করো</button>
     <button onclick="logoutAdmin()">লগআউট</button>
@@ -84,123 +140,160 @@
   <div id="message"></div>
 </div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-
 <script>
-// তোমার firebaseConfig এখানে পেস্ট করো
-const firebaseConfig = {
-  apiKey: "AIzaSy...GMP-4", // তোমারটা দাও
-  authDomain: "amin-voting-5ficd.firebaseapp.com",
-  databaseURL: "https://amin-voting-5ficd-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "amin-voting-5ficd",
-  storageBucket: "amin-voting-5ficd.firebasestorage.app",
-  messagingSenderId: "946435860615",
-  appId: "1:946435860615:web:914560cae6e28133133bea"
-};
+  let currentVoter = null;
+  const adminPassword = "admin";
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-let currentVoter = null;
-const adminPassword = "admin";
-
-function showAdminLogin() {
-  document.getElementById('admin-login').style.display = 'block';
-  document.getElementById('voter-section').style.display = 'none';
-  document.getElementById('vote-section').style.display = 'none';
-  showMessage('', '');
-}
-
-function loginAdmin() {
-  if (document.getElementById('adminPass').value === adminPassword) {
-    document.getElementById('admin-login').style.display = 'none';
-    document.getElementById('admin-section').style.display = 'block';
-    loadAdminResults();
-    showMessage('অ্যাডমিন প্যানেলে স্বাগতম!', 'success');
-  } else {
-    showMessage('ভুল পাসওয়ার্ড!', 'error');
+  function showAdminLogin() {
+    hideAllSections();
+    document.getElementById('admin-login').style.display = 'block';
   }
-}
 
-function logoutAdmin() {
-  document.getElementById('admin-section').style.display = 'none';
-  document.getElementById('voter-section').style.display = 'block';
-}
-
-function backToVoting() {
-  document.getElementById('admin-section').style.display = 'none';
-  document.getElementById('voter-section').style.display = 'block';
-}
-
-function startVoting() {
-  currentVoter = document.getElementById('voterName').value.trim();
-  if (!currentVoter) return showMessage("নাম লিখো!", 'error');
-
-  db.ref('voterVotes/' + currentVoter).once('value').then(snap => {
-    if (snap.exists()) {
-      showMessage(`"${currentVoter}" ইতিমধ্যে ভোট দিয়েছে!`, 'error');
+  function loginAdmin() {
+    if (document.getElementById('adminPass').value === adminPassword) {
+      hideAllSections();
+      document.getElementById('admin-section').style.display = 'block';
+      refreshResults();
+      showMessage('অ্যাডমিন প্যানেলে স্বাগতম!', 'success');
     } else {
-      document.getElementById('voter-section').style.display = 'none';
-      document.getElementById('vote-section').style.display = 'block';
-      showMessage(`হ্যালো ${currentVoter} — ভোট দাও`, 'success');
+      showMessage('ভুল পাসওয়ার্ড!', 'error');
     }
-  });
-}
+  }
 
-function vote(symbol) {
-  db.ref('votes/' + symbol).transaction(count => (count || 0) + 1);
-  db.ref('voted').push(currentVoter);
-  db.ref('voterVotes/' + currentVoter).set(symbol);
+  function logoutAdmin() { hideAllSections(); document.getElementById('voter-section').style.display = 'block'; showMessage('লগআউট সফল', 'success'); }
+  function backToVoting() { hideAllSections(); document.getElementById('voter-section').style.display = 'block'; showMessage('ভোটিং পেজে ফিরে এসেছেন', 'success'); }
 
-  showMessage(`ধন্যবাদ ${currentVoter}! তোমার ভোট গ্রহণ করা হয়েছে।`, 'success');
-  document.getElementById('vote-section').style.display = 'none';
-  document.getElementById('voter-section').style.display = 'block';
-  document.getElementById('voterName').value = '';
-}
+  function hideAllSections() {
+    ['admin-login', 'admin-section', 'voter-section', 'vote-section'].forEach(id => {
+      document.getElementById(id).style.display = 'none';
+    });
+  }
 
-function loadAdminResults() {
-  db.ref('votes').on('value', snap => {
-    const votes = snap.val() || {};
-    const total = Object.values(votes).reduce((a,b)=>a+b,0) || 0;
+  function startVoting() {
+    currentVoter = document.getElementById('voterName').value.trim();
+    if (!currentVoter) return showMessage("নাম লিখো!", 'error');
+    if (hasVoted(currentVoter)) return showMessage(`"${currentVoter}" ইতিমধ্যে ভোট দিয়েছে!`, 'error');
 
-    let html = '';
+    hideAllSections();
+    document.getElementById('vote-section').style.display = 'block';
+    showMessage(`হ্যালো ${currentVoter} — ভোট দাও`, 'success');
+  }
+
+  function vote(symbol) {
+    let votes = getVotes();
+    votes[symbol] = (votes[symbol] || 0) + 1;
+    localStorage.setItem('votes', JSON.stringify(votes));
+
+    let voted = getVotedList();
+    voted.push(currentVoter);
+    localStorage.setItem('voted', JSON.stringify(voted));
+
+    let voterVotes = getVoterVotes();
+    voterVotes[currentVoter] = symbol;
+    localStorage.setItem('voterVotes', JSON.stringify(voterVotes));
+
+    showMessage(`ধন্যবাদ ${currentVoter}! তোমার ভোট গ্রহণ করা হয়েছে।`, 'success');
+    hideAllSections();
+    document.getElementById('voter-section').style.display = 'block';
+    document.getElementById('voterName').value = '';
+  }
+
+  function hasVoted(name) { return getVotedList().includes(name); }
+  function getVotedList() { return JSON.parse(localStorage.getItem('voted') || '[]'); }
+  function getVotes() { return JSON.parse(localStorage.getItem('votes') || '{}'); }
+  function getVoterVotes() { return JSON.parse(localStorage.getItem('voterVotes') || '{}'); }
+
+  function refreshResults() {
+    const votes = getVotes();
+    const voted = getVotedList();
+    const voterVotes = getVoterVotes();
+    const total = voted.length;
+
+    let maxVotes = 0;
+    let winner = '';
     const cands = [
-      {key:'কলম', name:'কলম (নিলফাজ)', color:'#10b981'},
-      {key:'বই', name:'বই (নিহাল)', color:'#f59e0b'},
-      {key:'শাপলা', name:'শাপলা (আয়েশা)', color:'#ef4444'}
+      {key: 'কলম', name: 'কলম (নিলফাজ)', color: 'var(--success)'},
+      {key: 'বই',   name: 'বই (নিহাল)',   color: 'var(--warning)'},
+      {key: 'শাপলা',name: 'শাপলা (আয়েশা)',color: 'var(--danger)'}
     ];
 
+    let html = '<h3>রেজাল্ট</h3>';
     cands.forEach(c => {
       const count = votes[c.key] || 0;
-      const pct = total ? Math.round(count / total * 100) : 0;
-      html += `<div><strong>${c.name}: ${count} (${pct}%)</strong><div class="result-bar"><div class="bar-fill" style="width:${pct}%;background:${c.color};">${pct}%</div></div></div>`;
+      const pct = total ? Math.round((count / total) * 100) : 0;
+      if (count > maxVotes) { maxVotes = count; winner = c.name; }
+      html += `
+        <div style="margin:18px 0;">
+          <strong>${c.name}: ${count} (${pct}%)</strong>
+          <div class="result-bar" style="background:#e5e7eb;height:45px;border-radius:12px;overflow:hidden;">
+            <div class="bar-fill" style="width:${pct}%;background:${c.color};">${pct > 8 ? pct + '%' : ''}</div>
+          </div>
+        </div>`;
     });
 
-    html += `<p>মোট ভোট: ${total}</p>`;
+    html += `<p style="text-align:center;font-size:1.3em;margin-top:30px;">
+      মোট ভোট: <strong>${total}</strong> টি
+      ${winner ? `<br><span class="winner">বর্তমানে এগিয়ে আছে: ${winner}</span>` : ''}
+    </p>`;
+
     document.getElementById('admin-results').innerHTML = html;
-  });
 
-  db.ref('voted').on('value', snap => {
-    let list = [];
-    snap.forEach(child => list.push(child.val()));
-    document.getElementById('voted-list').innerHTML = list.map(v => `<li>${v}</li>`).join('');
-  });
-}
+    document.getElementById('admin-stats').innerHTML = `ভোট দেওয়া: ${total} জন`;
 
-function resetAllVotes() {
-  if (confirm('সব রিসেট করবে?')) {
-    db.ref().remove();
-    showMessage('রিসেট হয়েছে!', 'success');
+    // ভোটার লিস্ট
+    let listHtml = '<ul style="list-style:none;padding:0;">';
+    voted.forEach(v => {
+      listHtml += `<li style="padding:8px 0;border-bottom:1px solid #eee;">
+        <strong>${v}</strong> → ${voterVotes[v] || '?'} 
+      </li>`;
+    });
+    listHtml += '</ul>';
+    if (!voted.length) listHtml = '<p>কেউ ভোট দেয়নি এখনো।</p>';
+    document.getElementById('voted-list').innerHTML = listHtml;
   }
-}
 
-function showMessage(text, type) {
-  const el = document.getElementById('message');
-  el.textContent = text;
-  el.className = type;
-}
+  function searchVoters() {
+    const term = document.getElementById('voter-search').value.toLowerCase().trim();
+    const items = document.querySelectorAll('#voted-list li');
+    items.forEach(item => {
+      item.style.display = item.textContent.toLowerCase().includes(term) ? '' : 'none';
+    });
+  }
+
+  function exportVoterData() {
+    const voted = getVotedList();
+    const voterVotes = getVoterVotes();
+    let csv = "নাম,ভোট দেওয়া মার্কা\n";
+    voted.forEach(v => {
+      csv += `"${v.replace(/"/g,'""')}","${voterVotes[v] || ''}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'voter_data.csv';
+    link.click();
+    URL.revokeObjectURL(url);
+    showMessage('CSV ফাইল ডাউনলোড শুরু হয়েছে!', 'success');
+  }
+
+  function resetAllVotes() {
+    if (confirm('সব ভোট মুছে ফেলবে? এটা ফিরানো যাবে না!')) {
+      localStorage.clear();
+      refreshResults();
+      showMessage('সব রিসেট হয়েছে!', 'success');
+    }
+  }
+
+  function showMessage(text, type) {
+    const el = document.getElementById('message');
+    el.textContent = text;
+    el.className = type || '';
+  }
+
+  // অ্যাডমিনে ঢুকলে অটো রিফ্রেশ
+  if (document.getElementById('admin-section').style.display === 'block') refreshResults();
 </script>
 </body>
 </html>
